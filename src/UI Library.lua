@@ -1198,6 +1198,10 @@ function utility.create(class, properties)
 	if not type(properties.Visible) == "boolean" then
 		properties.Visible = false
 	end
+	
+    if class == "Text" then -- I hate solara
+        properties.OutlineColor = Color3.fromRGB(0, 0, 0)
+    end
 
 	local obj = drawing:new(class)
 
