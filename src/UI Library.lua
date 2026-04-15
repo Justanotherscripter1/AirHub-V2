@@ -326,7 +326,7 @@ local drawing = {} do
 	function drawing:new(shape)
 		local obj = Drawing.new(shape)
 		objexists[obj] = true
-		pcall(setrenderproperty, obj, "Visible", false)--obj.Visible = false -- I hate solara
+		pcall(setrenderproperty, obj, "Visible", false)--obj.Visible = false -- I hate solara pt2
 		local signalnames = {}
 
 		local listfunc
@@ -2817,18 +2817,20 @@ function library:Load(options)
 		self.extension = extension
 	end
 
-	local _s = pcall(function()
-		local cursor = utility.create("Triangle", {
-			Thickness = 2,
-			Color = Color3.fromRGB(200, 150, 200),
-			ZIndex = 1000,
-			Visible = 1
-		})
+	if identifyexecutor() ~= "Solara" then -- this is what yall get
+		local _s = pcall(function()
+			local cursor = utility.create("Triangle", {
+				Thickness = 2,
+				Color = Color3.fromRGB(200, 150, 200),
+				ZIndex = 1000,
+				Visible = 1
+			})
+	
+			self.cursor = cursor
+		end)
+	end
 
-		self.cursor = cursor
-	end)
-
-	if _s and self.cursor then -- i hate solara part 2 (16.04.2026)
+	if _s and self.cursor then -- i hate solara part 3
 		services.InputService.MouseIconEnabled = false
 
 		utility.connect(services.RunService.RenderStepped, function()
