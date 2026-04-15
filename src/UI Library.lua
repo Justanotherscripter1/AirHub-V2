@@ -2830,7 +2830,7 @@ function library:Load(options)
 		end)
 	end
 
-	if _s and self.cursor then -- i hate solara part 3
+	if self.cursor then -- i hate solara part 3
 		services.InputService.MouseIconEnabled = false
 
 		utility.connect(services.RunService.RenderStepped, function()
