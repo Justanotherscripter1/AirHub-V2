@@ -8,14 +8,14 @@ local drawing = {} do
 			if key == "InputService" then
 				key = "UserInputService"
 			end
-			
+
 			if not rawget(self, key) then
 				local service = game:GetService(key)
 				rawset(self, service, service)
-	
+
 				return service
 			end
-		
+
 			return rawget(self, key)
 		end
 	})
@@ -174,7 +174,7 @@ local drawing = {} do
 		local right = pos2.X + size2.X - (pos1.X + size1.X)
 
 		local touching = true
-		
+
 		if top > 0 then
 			touching = false
 		elseif bottom < 0 then
@@ -184,7 +184,7 @@ local drawing = {} do
 		elseif right < 0 then
 			touching = false
 		end
-		
+
 		return touching
 	end
 
@@ -297,7 +297,7 @@ local drawing = {} do
 		for obj, signals in next, objsignals do
 			if objexists[obj] then
 				if obj.Visible then
-					if ismouseover(obj) and not mouseoverhighersquare(obj) then 
+					if ismouseover(obj) and not mouseoverhighersquare(obj) then
 						signals.inputbegan[input] = true
 
 						if signals.InputBegan then
@@ -326,7 +326,7 @@ local drawing = {} do
 	function drawing:new(shape)
 		local obj = Drawing.new(shape)
 		objexists[obj] = true
-		obj.Visible = false
+		pcall(setrenderproperty, obj, "Visible", false)--obj.Visible = false -- I hate solara
 		local signalnames = {}
 
 		local listfunc
@@ -484,11 +484,11 @@ local drawing = {} do
 
 					local newpos = mtobjs[self].Position + Vector2.new(0, listcontents[self] + (#listchildren[self] == 1 and 0 or padding))
 					object.Position = newpos
-					
+
 					childrenposupdates[object](objmts[object], newpos)
 
 					custompropertysets[object]("AbsolutePosition", newpos)
-					
+
 					listadds[self][object] = object.Size.Y + (#listchildren[self] == 1 and 0 or padding)
 					listcontents[self] = listcontents[self] + object.Size.Y + (#listchildren[self] == 1 and 0 or padding)
 				end
@@ -563,7 +563,7 @@ local drawing = {} do
 							local objindex = table.find(objchildren[customproperties.Parent], obj)
 
 							listcontents[customproperties.Parent] = listcontents[customproperties.Parent] - listadds[customproperties.Parent][obj]
-			
+
 							for i, object in next, objchildren[customproperties.Parent] do
 								if i > objindex then
 									object.Position = object.Position - Vector2.new(0, listadds[customproperties.Parent][obj])
@@ -583,7 +583,7 @@ local drawing = {} do
 						if table.find(squares, mtobjs[self]) then
 							table.remove(squares, table.find(squares, mtobjs[self]))
 						end
-						
+
 						for _, object in next, objchildren[self] do
 							if objexists[object] then
 								table.remove(objsignals, table.find(objsignals, object))
@@ -598,7 +598,7 @@ local drawing = {} do
 
 				if signalnames and signalnames[k] then
 					objsignals[obj] = objsignals[obj] or {}
-					
+
 					if not objsignals[obj][k] then
 						objsignals[obj][k] = signalnames[k]
 					end
@@ -658,7 +658,7 @@ local drawing = {} do
 						if listobjs[parent] then
 							for i, object in next, objchildren[parent] do
 								local newpos = val + Vector2.new(0, listindexes[parent][i])
-		
+
 								if scrollobjs[parent] then
 									newpos = val + Vector2.new(0, listindexes[parent][i] + scrollpositions[parent])
 								end
@@ -678,7 +678,7 @@ local drawing = {} do
 								object.Position = newpos
 
 								custompropertysets[object]("AbsolutePosition", newpos)
-								
+
 								changechildrenpos(objmts[object], newpos)
 							end
 						end
@@ -690,7 +690,7 @@ local drawing = {} do
 				if k == "Position" then
 					if typeof(v) == "UDim2" then
 						udim2posobjs[obj] = v
-						
+
 						if customproperties.Parent then
 							objpositions[obj] = udim2tovector2(v, mtobjs[customproperties.Parent].Size)
 
@@ -744,7 +744,7 @@ local drawing = {} do
 							if udim2posobjs[object] then
 								local newpos = mtobjs[parent].Position + udim2tovector2(udim2posobjs[object], val)
 								newpos = Vector2.new(math.floor(newpos.X), math.floor(newpos.Y))
-								
+
 								if not listobjs[parent] then
 									object.Position = newpos
 								end
@@ -780,7 +780,7 @@ local drawing = {} do
 
 				if k == "Size" then
 					if typeof(v) == "UDim2" then
-						udim2sizeobjs[obj] = v 
+						udim2sizeobjs[obj] = v
 
 						if customproperties.Parent then
 							v = udim2tovector2(v, mtobjs[customproperties.Parent].Size)
@@ -927,7 +927,7 @@ local drawing = {} do
 					if custompropertygets[mtobjs[v]]("ClipsDescendants") then
 						obj.Visible = istouching(obj.Position, obj.Size, mtobjs[v].Position, mtobjs[v].Size) and objvisibles[obj] or false
 					end
-					
+
 					customproperties.Parent = v
 					return
 				end
@@ -985,18 +985,18 @@ function utility.dragify(object, dragoutline)
 	end)
 
 	utility.connect(services.InputService.InputEnded, function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 and dragging then 
+		if input.UserInputType == Enum.UserInputType.MouseButton1 and dragging then
 			dragging = false
 			--dragoutline.Visible = false
 			object.Position = currentpos
 		end
 	end)
-end 
+end
 
 function utility.textlength(str, font, fontsize)
 	local text = Drawing.new("Text")
 	text.Text = str
-	text.Font = font 
+	text.Font = font
 	text.Size = fontsize
 
 	local textbounds = text.TextBounds
@@ -1078,21 +1078,21 @@ end
 
 function utility.rgba(r, g, b, alpha)
 	local rgb = Color3.fromRGB(r, g, b)
-	
+
 	if rgbasupported then
 		local mt = table.clone(getrawmetatable(rgb))
-		
+
 		setreadonly(mt, false)
 		local old = mt.__index
-		
+
 		mt.__index = newcclosure(function(self, key)
 			if key:lower() == "a" then
 				return alpha
 			end
-			
+
 			return old(self, key)
 		end)
-		
+
 		setrawmetatable(rgb, mt)
 	else
 		--[[
@@ -1112,7 +1112,7 @@ function utility.rgba(r, g, b, alpha)
 			end)
 		})]]
 	end
-	
+
 	return rgb
 end
 
@@ -1179,7 +1179,7 @@ function utility.outline(obj, color)
 	outline.Size = UDim2.new(1, 2, 1, 2)
 	outline.Position = UDim2.new(0, -1, 0, -1)
 	outline.ZIndex = obj.ZIndex - 1
-	
+
 	if typeof(color) == "Color3" then
 		outline.Color = color
 	else
@@ -1198,7 +1198,7 @@ function utility.create(class, properties)
 	if not type(properties.Visible) == "boolean" then
 		properties.Visible = false
 	end
-	
+
 	local obj = drawing:new(class)
 
 	for prop, v in next, properties do
@@ -1209,7 +1209,7 @@ function utility.create(class, properties)
 			obj[prop] = v
 		end
 	end
-	
+
 	return obj
 end
 
@@ -1391,7 +1391,7 @@ function library:SetTheme(theme)
 			for option, color in next, themetbl do
 				themetbl[option] = utility.hextorgb(color)
 			end
-			
+
 			library:OverrideTheme(themetbl)
 		end
 	end
@@ -1430,8 +1430,8 @@ function library:SaveCustomTheme(name)
 		local theme = services.HttpService:JSONEncode(themetbl)
 		local folderpath = string.format("%s//themes", self.folder)
 
-		if not isfolder(folderpath) then 
-			makefolder(folderpath) 
+		if not isfolder(folderpath) then
+			makefolder(folderpath)
 		end
 
 		local filepath = string.format("%s//%s.cfg", folderpath, name)
@@ -1460,7 +1460,7 @@ function library:Unload()
 	end
 
 	if self.watermarkobject then
-	   self.watermarkobject:Remove() 
+		self.watermarkobject:Remove()
 	end
 
 	for _, connection in next, self.connections do
@@ -1503,7 +1503,7 @@ end
 function library.createbox(box, text, callback, finishedcallback)
 	box.MouseButton1Click:Connect(function()
 		services.ContextActionService:BindActionAtPriority("disablekeyboard", function() return Enum.ContextActionResult.Sink end, false, 3000, Enum.UserInputType.Keyboard)
-		
+
 		local connection
 		local backspaceconnection
 
@@ -1518,7 +1518,7 @@ function library.createbox(box, text, callback, finishedcallback)
 						if table.find(allowedcharacters, str) then
 							keyqueue = keyqueue + 1
 							local currentqueue = keyqueue
-							
+
 							if not services.InputService:IsKeyDown(Enum.KeyCode.RightShift) and not services.InputService:IsKeyDown(Enum.KeyCode.LeftShift) then
 								text.Text = text.Text .. str:lower()
 								callback(text.Text)
@@ -1531,7 +1531,7 @@ function library.createbox(box, text, callback, finishedcallback)
 									while services.InputService:IsKeyDown(input.KeyCode) and currentqueue == keyqueue  do
 										text.Text = text.Text .. str:lower()
 										callback(text.Text)
-			
+
 										task.wait(0.02)
 									end
 								end)()
@@ -1541,11 +1541,11 @@ function library.createbox(box, text, callback, finishedcallback)
 
 								coroutine.wrap(function()
 									task.wait(0.5)
-									
+
 									while services.InputService:IsKeyDown(input.KeyCode) and currentqueue == keyqueue  do
 										text.Text = text.Text .. (shiftcharacters[str] or str:upper())
 										callback(text.Text)
-			
+
 										task.wait(0.02)
 									end
 								end)()
@@ -1572,7 +1572,7 @@ function library.createbox(box, text, callback, finishedcallback)
 			backspaceconnection = utility.connect(services.InputService.InputBegan, function(input)
 				if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.Backspace then
 					backspacequeue = backspacequeue + 1
-					
+
 					text.Text = text.Text:sub(1, -2)
 					callback(text.Text)
 
@@ -1708,7 +1708,7 @@ function library.createdropdown(holder, content, flag, callback, default, max, s
 	local optioninstances = {}
 	local count = 0
 	local countindex = {}
-	
+
 	local function createoption(name)
 		optioninstances[name] = {}
 
@@ -1908,7 +1908,7 @@ function library.createdropdown(holder, content, flag, callback, default, max, s
 			library.flags[flag] = chosen
 			callback(chosen)
 		end
-		
+
 		if not max then
 			for opt, tbl in next, optioninstances do
 				if opt ~= option then
@@ -1965,7 +1965,7 @@ function library.createdropdown(holder, content, flag, callback, default, max, s
 		createoptions(tbl)
 
 		if scrollable then
-			contentholder:RefreshScrolling() 
+			contentholder:RefreshScrolling()
 		end
 
 		value.Text = "NONE"
@@ -1976,7 +1976,7 @@ function library.createdropdown(holder, content, flag, callback, default, max, s
 		else
 			chosen = nil
 		end
-		
+
 		library.flags[flag] = chosen
 		callback(chosen)
 	end
@@ -2085,7 +2085,7 @@ function library.createslider(min, max, parent, text, default, float, flag, call
 		value = math.clamp(utility.round(value, float), min, max)
 
 		valuetext.Text = text:gsub("%[value%]", string.format("%.14g", value))
-		
+
 		local sizeX = ((value - min) / (max - min))
 		fill.Size = UDim2.new(sizeX, 0, 1, 0)
 
@@ -2096,7 +2096,7 @@ function library.createslider(min, max, parent, text, default, float, flag, call
 	set(default)
 
 	local sliding = false
-	
+
 	local mouseover = false
 
 	slider.MouseEnter:Connect(function()
@@ -2112,7 +2112,7 @@ function library.createslider(min, max, parent, text, default, float, flag, call
 			slider.Color = library.theme["Object Background"]
 		end
 	end)
-	
+
 	local function slide(input)
 		local sizeX = (input.Position.X - slider.AbsolutePosition.X) / slider.AbsoluteSize.X
 		local value = ((max - min) * sizeX) + min
@@ -2412,7 +2412,7 @@ function library.createcolorpicker(default, defaultalpha, parent, count, flag, c
 
 			text.Text = string.format("%s, %s, %s", math.round(hsv.R * 255), math.round(hsv.G * 255), math.round(hsv.B * 255))
 
-			if flag then 
+			if flag then
 				library.flags[flag] = utility.rgba(hsv.r * 255, hsv.g * 255, hsv.b * 255, alpha)
 			end
 
@@ -2428,7 +2428,7 @@ function library.createcolorpicker(default, defaultalpha, parent, count, flag, c
 
 	local curhuesizey = defhue
 
-	library.createbox(rgbinput, text, function(str) 
+	library.createbox(rgbinput, text, function(str)
 		if str == "" then
 			text.Visible = false
 			placeholdertext.Visible = true
@@ -2706,7 +2706,7 @@ function library.createkeybind(default, parent, blacklist, flag, callback, offse
 			keytext.Text = "..."
 			utility.changeobjecttheme(keytext, "Disabled Text")
 			keytext.Position = UDim2.new(1, -sizeX, 0, 0)
-			
+
 			binding = utility.connect(services.InputService.InputBegan, function(input, gpe)
 				set(input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode or input.UserInputType)
 				utility.disconnect(binding)
@@ -2755,7 +2755,7 @@ function library:Watermark(str)
 
 	local outline = utility.outline(watermark, "Accent")
 	utility.outline(outline, "Window Border")
-	
+
 	local text = utility.create("Text", {
 		Text = str,
 		Font = Drawing.Fonts.Plex,
@@ -2864,8 +2864,8 @@ function library:Load(options)
 	})
 
 	main.MouseEnter:Connect(function()
-		services.ContextActionService:BindActionAtPriority("disablemousescroll", function() 
-			return Enum.ContextActionResult.Sink 
+		services.ContextActionService:BindActionAtPriority("disablemousescroll", function()
+			return Enum.ContextActionResult.Sink
 		end, false, 3000, Enum.UserInputType.MouseWheel)
 	end)
 
@@ -2876,7 +2876,7 @@ function library:Load(options)
 	local outline = utility.outline(main, "Accent")
 
 	utility.outline(outline, "Window Border")
-	
+
 	local dragoutline = utility.create("Square", {
 		Size = UDim2.new(0, sizeX, 0, sizeY),
 		Position = utility.getcenter(sizeX, sizeY),
@@ -2895,7 +2895,7 @@ function library:Load(options)
 		ZIndex = 0,
 		Theme = "Window Border",
 	})
-	
+
 	utility.dragify(holder, dragoutline)
 
 	local tabholder = utility.create("Square", {
@@ -2969,7 +2969,7 @@ function library:Load(options)
 			task.wait()
 			tab.Visible = tab.Visible
 		end)
-		
+
 		local column1 = utility.create("Square", {
 			Transparency = 0,
 			Parent = tab,
@@ -3004,24 +3004,24 @@ function library:Load(options)
 		tabtoggle.MouseButton1Down:Connect(function()
 			tabtoggle.Color = tab.Visible == true and utility.changecolor(library.theme["Tab Toggle Background"], 6) or utility.changecolor(library.theme["Tab Background"], 6)
 		end)
-		
+
 		tabtoggle.MouseButton1Click:Connect(function()
 			for _, obj in next, self.tabtoggles do
 				if obj ~= tabtoggle then
 					utility.changeobjecttheme(obj, "Tab Background")
-				end 
+				end
 			end
 
 			for _, obj in next, self.tabtoggletitles do
 				if obj ~= title then
 					utility.changeobjecttheme(obj, "Disabled Text")
-				end 
+				end
 			end
 
 			for _, obj in next, self.tabs do
 				if obj ~= tab then
 					obj.Visible = false
-				end 
+				end
 			end
 
 			tab.Visible = true
@@ -3032,7 +3032,7 @@ function library:Load(options)
 		end)
 
 		firsttabsignal = firsttabsignal or tabtoggle.MouseButton1Click
-	
+
 		local tabtypes = utility.table({}, true)
 
 		function tabtypes:Section(options)
@@ -3052,7 +3052,7 @@ function library:Load(options)
 			})
 
 			utility.outline(section, "Section Border")
-			
+
 			utility.create("Text", {
 				Text = name,
 				Font = Drawing.Fonts.Plex,
@@ -3350,7 +3350,7 @@ function library:Load(options)
 						table.remove(accentobjs, table.find(accentobjs, icon))
 						table.remove(accentobjs, table.find(accentobjs, title))
 					end
-					
+
 					library.flags[flag] = toggled
 					callback(toggled)
 				end
@@ -3433,15 +3433,15 @@ function library:Load(options)
 					local scrollingmax = options.scrollingmax or 10
 					local flag = options.flag or utility.nextflag()
 					local callback = options.callback or function() end
-	
+
 					if not max and type(default) == "table" then
 						default = nil
 					end
-	
+
 					if max and default == nil then
 						default = {}
 					end
-	
+
 					if type(default) == "table" then
 						if max then
 							for i, opt in next, default do
@@ -3539,7 +3539,7 @@ function library:Load(options)
 					box.Color = mouseover and utility.changecolor(library.theme["Object Background"], 3) or library.theme["Object Background"]
 				end)
 
-				library.createbox(box, text, function(str) 
+				library.createbox(box, text, function(str)
 					if str == "" then
 						text.Visible = false
 						placeholdertext.Visible = true
