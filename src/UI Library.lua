@@ -1199,9 +1199,9 @@ function utility.create(class, properties)
 		properties.Visible = false
 	end
 	
-    if class == "Text" then -- I hate solara
-        properties.OutlineColor = Color3.fromRGB(0, 0, 0)
-    end
+	if class == "Text" then -- I hate solara
+		properties.OutlineColor = Color3.fromRGB(0, 0, 0)
+	end
 
 	local obj = drawing:new(class)
 
@@ -2817,25 +2817,30 @@ function library:Load(options)
 		self.extension = extension
 	end
 
-	local cursor = utility.create("Triangle", {
-		Thickness = 2,
-		Color = Color3.fromRGB(200, 150, 200),
-		ZIndex = 1000
-	})
+	local _s = pcall(function()
+		local cursor = utility.create("Triangle", {
+			Thickness = 2,
+			Color = Color3.fromRGB(200, 150, 200),
+			ZIndex = 1000,
+			Visible = 1
+		})
 
-	self.cursor = cursor
-
-	services.InputService.MouseIconEnabled = false
-
-	utility.connect(services.RunService.RenderStepped, function()
-		if self.open then
-			local mousepos = services.InputService:GetMouseLocation()
-			cursor.PointA = mousepos
-			cursor.PointB = mousepos + Vector2.new(15, 12.5)
-			cursor.PointC = mousepos + Vector2.new(0, 20)
-			cursor.Filled = true
-		end
+		self.cursor = cursor
 	end)
+
+	if _s and self.cursor then -- i hate solara part 2 (16.04.2026)
+		services.InputService.MouseIconEnabled = false
+
+		utility.connect(services.RunService.RenderStepped, function()
+			if self.open then
+				local mousepos = services.InputService:GetMouseLocation()
+				cursor.PointA = mousepos
+				cursor.PointB = mousepos + Vector2.new(15, 12.5)
+				cursor.PointC = mousepos + Vector2.new(0, 20)
+				cursor.Filled = true
+			end
+		end)
+	end
 
 	local holder = utility.create("Square", {
 		Transparency = 0,
