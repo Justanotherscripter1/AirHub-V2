@@ -44,6 +44,8 @@ local CenterDot = Crosshair.CenterDot
 local Aimbot_DeveloperSettings = Aimbot.DeveloperSettings
 local Aimbot_Settings = Aimbot.Settings
 local Aimbot_FOV = Aimbot.FOVSettings
+local Aimbot_CPT = Aimbot.ClosestPlayerTracer
+local Triggerbot = Aimbot.Triggerbot
 
 ESP_Settings.LoadConfigOnLaunch = false
 ESP_Settings.Enabled = false
@@ -53,6 +55,7 @@ Aimbot_Settings.Enabled = false
 local Fonts = {"UI", "System", "Plex", "Monospace"}
 local TracerPositions = {"Bottom", "Center", "Mouse"}
 local HealthBarPositions = {"Top", "Bottom", "Left", "Right"}
+local BoxTypes = {"Square", "Quad", "Corner"}
 
 --// Tabs
 
@@ -182,6 +185,13 @@ ESPDeveloperSection:Button({
 	end
 })
 
+ESPDeveloperSection:Button({
+	Name = "Rewrite Entries / Hard Reboot",
+	Callback = function()
+		ESP:Restart(true)
+	end
+})
+
 AddValues(ESPSection, ESP_Settings, {"LoadConfigOnLaunch", "PartsOnly"}, "ESPSettings_")
 
 AimbotSection:Toggle({
@@ -299,10 +309,10 @@ AimbotPropertiesSection:Slider({
 AimbotPropertiesSection:Dropdown({
 	Name = "Lock Mode",
 	Flag = "Aimbot_Settings_LockMode",
-	Content = {"CFrame", "mousemoverel"},
-	Default = Aimbot_Settings.LockMode == 1 and "CFrame" or "mousemoverel",
+	Content = {"CFrame", "mousemoverel", "mousemoveabs"},
+	Default = Aimbot_Settings.LockMode == 1 and "CFrame" or Aimbot_Settings.LockMode == 2 and "mousemoverel" or "mousemoveabs",
 	Callback = function(Value)
-		Aimbot_Settings.LockMode = Value == "CFrame" and 1 or 2
+		Aimbot_Settings.LockMode = Value == "CFrame" and 1 or Value == "mousemoverel" and 2 or 3
 	end
 })
 
@@ -398,6 +408,63 @@ AimbotFOVSection:Slider({
 	end
 })
 
+local AimbotCPTSection = _Aimbot:Section({
+	Name = "Closest Player Tracer Settings",
+	Side = "Right"
+})
+
+AddValues(AimbotCPTSection, Aimbot_CPT, {}, "Aimbot_CPT_")
+
+AimbotCPTSection:Dropdown({
+	Name = "Position",
+	Flag = "CPT_Position",
+	Content = TracerPositions,
+	Default = TracerPositions[Aimbot_CPT.Position],
+	Callback = function(Value)
+		Aimbot_CPT.Position = tablefind(TracerPositions, Value)
+	end
+})
+
+AimbotCPTSection:Slider({
+	Name = "Transparency",
+	Flag = "CPT_Transparency",
+	Default = Aimbot_CPT.Transparency * 10,
+	Min = 1,
+	Max = 10,
+	Callback = function(Value)
+		Aimbot_CPT.Transparency = Value / 10
+	end
+})
+
+AimbotCPTSection:Slider({
+	Name = "Thickness",
+	Flag = "CPT_Thickness",
+	Default = Aimbot_CPT.Thickness,
+	Min = 1,
+	Max = 5,
+	Callback = function(Value)
+		Aimbot_CPT.Thickness = Value
+	end
+})
+
+local TriggerbotSection = _Aimbot:Section({
+	Name = "Triggerbot Settings",
+	Side = "Right"
+})
+
+AddValues(TriggerbotSection, Triggerbot, {}, "Triggerbot_")
+
+TriggerbotSection:Slider({
+	Name = "Delay (ms)",
+	Flag = "Triggerbot_Delay",
+	Default = Triggerbot.Delay * 100,
+	Min = 0,
+	Max = 200,
+	Callback = function(Value)
+		Triggerbot.Delay = Value / 100
+	end
+})
+
 --// ESP Tab
 
 local ESP_Properties_Section = _ESP:Section({
@@ -489,6 +556,35 @@ Tracer_Properties_Section:Slider({
 	end
 })
 
+local Skeleton_Properties_Section = _ESP:Section({
+	Name = "Skeleton Properties",
+	Side = "Right"
+})
+
+AddValues(Skeleton_Properties_Section, ESP_Properties.Skeleton, {}, "Skeleton_Properties_")
+
+Skeleton_Properties_Section:Slider({
+	Name = "Transparency",
+	Flag = "Skeleton_Transparency",
+	Default = ESP_Properties.Skeleton.Transparency * 10,
+	Min = 1,
+	Max = 10,
+	Callback = function(Value)
+		ESP_Properties.Skeleton.Transparency = Value / 10
+	end
+})
+
+Skeleton_Properties_Section:Slider({
+	Name = "Thickness",
+	Flag = "Skeleton_Thickness",
+	Default = ESP_Properties.Skeleton.Thickness,
+	Min = 1,
+	Max = 5,
+	Callback = function(Value)
+		ESP_Properties.Skeleton.Thickness = Value
+	end
+})
+
 local HeadDot_Properties_Section = _ESP:Section({
 	Name = "Head Dot Properties",
 	Side = "Left"
@@ -529,14 +625,19 @@ HeadDot_Properties_Section:Slider({
 	end
 })
 
-local Box_Properties_Section = _ESP:Section({
-	Name = "Box Properties",
+local Box_Properties_Section1 = _ESP:Section({
+	Name = "Box Properties (1 / 2)",
 	Side = "Left"
 })
 
-AddValues(Box_Properties_Section, ESP_Properties.Box, {}, "Box_Properties_")
+local Box_Properties_Section2 = _ESP:Section({
+	Name = "Box Properties (2 / 2)",
+	Side = "Right"
+})
 
-Box_Properties_Section:Slider({
+AddValues(Box_Properties_Section1, ESP_Properties.Box, {}, "Box_Properties_")
+
+Box_Properties_Section2:Slider({
 	Name = "Transparency",
 	Flag = "Box_Transparency",
 	Default = ESP_Properties.Box.Transparency * 10,
@@ -547,7 +648,18 @@ Box_Properties_Section:Slider({
 	end
 })
 
-Box_Properties_Section:Slider({
+Box_Properties_Section2:Slider({
+	Name = "Fill Transparency",
+	Flag = "Box_FillTransparency",
+	Default = ESP_Properties.Box.FillTransparency * 10,
+	Min = 1,
+	Max = 10,
+	Callback = function(Value)
+		ESP_Properties.Box.FillTransparency = Value / 10
+	end
+})
+
+Box_Properties_Section2:Slider({
 	Name = "Thickness",
 	Flag = "Box_Thickness",
 	Default = ESP_Properties.Box.Thickness,
@@ -555,6 +667,27 @@ Box_Properties_Section:Slider({
 	Max = 5,
 	Callback = function(Value)
 		ESP_Properties.Box.Thickness = Value
+	end
+})
+
+Box_Properties_Section2:Slider({
+	Name = "Line Size (Corner Type)",
+	Flag = "Box_LineSize",
+	Default = ESP_Properties.Box.LineSize,
+	Min = 2,
+	Max = 20,
+	Callback = function(Value)
+		ESP_Properties.Box.LineSize = Value
+	end
+})
+
+Box_Properties_Section2:Dropdown({
+	Name = "Box Type",
+	Flag = "Box_Type",
+	Content = BoxTypes,
+	Default = ESP_Properties.Box.Type == 1 and "Square" or ESP_Properties.Box.Type == 2 and "Quad" or "Corner",
+	Callback = function(Value)
+		ESP_Properties.Box.Type = Value == "Square" and 1 or Value == "Quad" and 2 or 3
 	end
 })
 
@@ -619,6 +752,7 @@ HealthBar_Properties_Section:Slider({
 	end
 })
 
+--[=[
 local Chams_Properties_Section = _ESP:Section({
 	Name = "Chams Properties",
 	Side = "Right"
@@ -645,6 +779,57 @@ Chams_Properties_Section:Slider({
 	Max = 5,
 	Callback = function(Value)
 		ESP_Properties.Chams.Thickness = Value
+	end
+})
+]=]
+
+local Highlight_Properties_Section = _ESP:Section({
+	Name = "Highlight Properties",
+	Side = "Left"
+})
+
+AddValues(Highlight_Properties_Section, ESP_Properties.Highlight, {}, "Highlight_Properties_")
+
+Highlight_Properties_Section:Slider({
+	Name = "Fill Transparency",
+	Flag = "Highlight_Transparency",
+	Default = ESP_Properties.Highlight.FillTransparency * 10,
+	Min = 1,
+	Max = 10,
+	Callback = function(Value)
+		ESP_Properties.Highlight.FillTransparency = Value / 10
+	end
+})
+
+Highlight_Properties_Section:Slider({
+	Name = "Outline Transparency",
+	Flag = "Highlight_Outline_Transparency",
+	Default = ESP_Properties.Highlight.OutlineTransparency * 10,
+	Min = 1,
+	Max = 10,
+	Callback = function(Value)
+		ESP_Properties.Highlight.OutlineTransparency = Value / 10
+	end
+})
+
+Highlight_Properties_Section:Slider({
+	Name = "Health Color Blue",
+	Flag = "Highlight_Blue",
+	Default = ESP_Properties.Highlight.HealthColorBlue,
+	Min = 0,
+	Max = 255,
+	Callback = function(Value)
+		ESP_Properties.Highlight.HealthColorBlue = Value
+	end
+})
+
+Highlight_Properties_Section:Dropdown({
+	Name = "Depth Mode",
+	Flag = "Highlight_DepthMode",
+	Content = {"AlwaysOnTop", "Occluded"},
+	Default = ESP_Properties.Highlight.DepthMode == Enum.HighlightDepthMode.AlwaysOnTop and "AlwaysOnTop" or "Occluded",
+	Callback = function(Value)
+		ESP_Properties.Highlight.DepthMode = Value == "AlwaysOnTop" and Enum.HighlightDepthMode.AlwaysOnTop or Enum.HighlightDepthMode.Occluded
 	end
 })
 
@@ -890,10 +1075,10 @@ SettingsSection:Keybind({
 SettingsSection:Button({
 	Name = "Unload Script",
 	Callback = function()
-		GUI:Unload()
-		ESP:Exit()
-		Aimbot:Exit()
 		getgenv().AirHubV2Loaded = nil
+		pcall(GUI.Unload, GUI)
+		pcall(ESP.Exit, ESP)
+		pcall(Aimbot.Exit, Aimbot)
 	end
 })
 
@@ -942,6 +1127,7 @@ InformationSection:Button({
 })
 
 InformationSection:Label("AirTeam © 2022 - "..osdate("%Y"))
+InformationSection:Label("SE Engine: "..identifyexecutor()) -- Script Execution Engine
 
 InformationSection:Button({
 	Name = "Copy Discord Invite",
@@ -987,4 +1173,7 @@ getgenv().AirHubV2Loaded = true
 getgenv().AirHubV2Loading = nil
 
 GeneralSignal:Fire()
-GUI:Close()
+
+for _ = 1, 3 do
+	wait(0.1); GUI:Close()
+end
