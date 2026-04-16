@@ -9,7 +9,7 @@
 <br>
 
 <p align="center">
-  <img src="https://github.com/Exunys/AirHub-V2/assets/76539058/b1faa804-64b6-4b57-a968-835d913f2ccf" />
+  <img src="https://github.com/user-attachments/assets/47881bab-16ff-4e89-9b42-76ee4dfc1b99" />
 </p>
 
 ![Fast](https://img.shields.io/badge/Fast-blue) ![Secure](https://img.shields.io/badge/Secure-darkgreen) ![Customizable](https://img.shields.io/badge/Customizable-purple) ![Organized](https://img.shields.io/badge/Organized-red) ![Optimized](https://img.shields.io/badge/Optimized-darkblue) ![Data Storing](https://img.shields.io/badge/Data-Storing-green) ![Undetectable](https://img.shields.io/badge/Undetectable-violet) ![Simple](https://img.shields.io/badge/Simple-yellow) ![Support](https://img.shields.io/badge/Multiplatform-Support-darkred) ![Reliable](https://img.shields.io/badge/Reliable-lightblue) ![Trusted](https://img.shields.io/badge/Trusted-lightgreen) </h2>
