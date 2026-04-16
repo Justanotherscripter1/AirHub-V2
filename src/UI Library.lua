@@ -1342,7 +1342,7 @@ function library:Close()
 		self.holder.Visible = self.open
 	end
 
-	if self.cursor then
+	if self.cursor and (identifyexecutor() ~= "Solara" or identifyexecutor() ~= "Xeno") then
 		self.cursor.Visible = self.open
 		services.InputService.MouseIconEnabled = not self.open and self.mousestate or false
 	end
@@ -2821,8 +2821,7 @@ function library:Load(options)
 			local cursor = utility.create("Triangle", {
 				Thickness = 2,
 				Color = Color3.fromRGB(200, 150, 200),
-				ZIndex = 1000,
-				Visible = 1
+				ZIndex = 1000
 			})
 	
 			self.cursor = cursor
