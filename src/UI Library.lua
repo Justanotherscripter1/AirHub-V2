@@ -2816,7 +2816,7 @@ function library:Load(options)
 		self.extension = extension
 	end
 
-	if identifyexecutor() ~= "Solara" then -- this is what yall get
+	if identifyexecutor() ~= "Solara" and identifyexecutor() ~= "Xeno" then -- this is what yall get
 		local _s = pcall(function()
 			local cursor = utility.create("Triangle", {
 				Thickness = 2,
