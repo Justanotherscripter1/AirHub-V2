@@ -12,14 +12,14 @@
   <img src="https://github.com/Exunys/AirHub-V2/assets/76539058/b1faa804-64b6-4b57-a968-835d913f2ccf" />
 </p>
 
-![Fast](https://img.shields.io/badge/Fast-blue) ![Secure](https://img.shields.io/badge/Secure-darkgreen) ![Customizable](https://img.shields.io/badge/Customizable-purple) ![Organized](https://img.shields.io/badge/Organized-red) ![Optimized](https://img.shields.io/badge/Optimized-darkblue) ![Data Storing](https://img.shields.io/badge/Data-Storing-green) ![Undetectable](https://img.shields.io/badge/Undetectable-violet) ![Simple](https://img.shields.io/badge/Simple-yellow) ![Support](https://img.shields.io/badge/Multiplatform-Support-darkred) ![Reliable](https://img.shields.io/badge/Reliable-lightblue) ![Trusted](https://img.shields.io/badge/Trusted-lightgreen) </h2>
+![Fast](https://img.shields.io/badge/Fast-blue) ![Secure](https://img.shields.io/badge/Secure-darkgreen) ![Customizable](https://img.shields.io/badge/Customizable-purple) ![Organized](https://img.shields.io/badge/Organized-red) ![Optimized](https://img.shields.io/badge/Optimized-darkblue) ![Data Storing](https://img.shields.io/badge/Data-Storing-green) ![Undetectable](https://img.shields.io/badge/Undetectable-violet) ![Simple](https://img.shields.io/badge/Simple-yellow) ![Support](https://img.shields.io/badge/Multiplatform-Support-darkred) ![Reliable](https://img.shields.io/badge/Reliable-lightblue) ![Trusted](https://img.shields.io/badge/Trusted-lightgreen) ![Popular](https://img.shields.io/badge/Popular-orange) </h2>
 <h1 align="center"> ℹ️  Information  ℹ️<br><br></h1>
 
 This is a universal script that features an Aimbot, Wall Hack (ESP) and a Crosshair. The customizability of this script makes it stand out from other free scripts some of which **have annoying key systems**. This project is completely free, adless and open sourced.
 
 This script is an entirely renewed version of the [old AirHub script](https://github.com/Exunys/AirHub). 
 
-It uses an entirely new [CS:GO-Styled ESP Module](https://github.com/Exunys/Exunys-ESP) which has been worked on with ambition and pushed to perfection. It also uses an upgraded version of [Exunys's old Aimbot V2 script](https://github.com/Exunys/Aimbot-V2) which goes by [Aimbot V3](https://github.com/Exunys/Aimbot-V3) for the Aimbot.
+It uses an entirely new [FPS-Styled ESP Module](https://github.com/Exunys/Exunys-ESP) which has been worked on with ambition and pushed to perfection. It also uses an upgraded version of [Exunys's old Aimbot V2 script](https://github.com/Exunys/Aimbot-V2) which goes by [Aimbot V3](https://github.com/Exunys/Aimbot-V3) for the Aimbot.
 
 The UI Library that this script uses is a forked version of an archive from an unknown owner's UI Library customized specifically for AirHub V2's standards to give the user a premium exploiting experience.
 
@@ -42,6 +42,7 @@ Press ***Right Shift*** to open/close the GUI. You can also change this key by o
 - [27/06/2024] - Added a degraded version to support weaker / free exploits 
 - [29/08/2024] - Removed primitive version, fixed original version, snipped / shelved chams
 - [09/10/2024] - Brought back chams, fixed execution for some executors
+- [16/04/2026] - Removed chams, fixed execution for executors and adjusted to the new [Aimbot V3](https://github.com/Exunys/Aimbot-V3/commit/46fbdecc8b146a303158c6c38506c00aaf7ce0f2) and [ESP v1.3b](https://github.com/Exunys/Exunys-ESP?tab=readme-ov-file#-update-log-ddmmyyyy) updates
 
 #
 
@@ -58,5 +59,5 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Exunys/AirHub-V2/main
 <h1 align="center"> 📧 Contact Information 📧</h1>
 
 <h3 align="center"> <a href="https://discord.com/users/611111398818316309">Discord</a></h3>
-<h3 align="center"> <a href="mailto:exunys@gang.email">E-Mail</a></h3>
+<h3 align="center"> <a href="mailto:exunys@gmail.com">E-Mail</a></h3>
 <h3 align="center"> <a href="t.me/exunys">Telegram</a></h3>
